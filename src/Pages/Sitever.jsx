@@ -1,15 +1,21 @@
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 
 const Sitever = () => {
+  const navigate = useNavigate();
   const navlinks = (
     <>
       <NavLink>Home</NavLink>
-      <NavLink>Send Money</NavLink>
-      <NavLink>Cash-Out</NavLink>
+      <NavLink to={'/sendmoney'}>Send Money</NavLink>
+      <NavLink to={'/cashout'}>Cash-Out</NavLink>
       <NavLink>Cash-in</NavLink>
       <NavLink>History</NavLink>
     </>
   );
+  const hanidleLoguots = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('email');
+    navigate('/login');
+  };
   return (
     <div>
       <div className="navbar bg-[#4caf50] text-[#ffffff]">
@@ -46,12 +52,50 @@ const Sitever = () => {
           </ul>
         </div>
         <div className="navbar-end gap-3">
-          <Link to={'/signup'}>
-            <a className="btn bg-[#f5f5f5]">Sign Up</a>
-          </Link>
-          <Link to={'/login'}>
-            <a className="btn bg-[#f5f5f5]">Login</a>
-          </Link>
+          {localStorage.getItem('token') ? (
+            <>
+              <div className="dropdown dropdown-end">
+                <div
+                  tabIndex={0}
+                  role="button"
+                  className="btn btn-ghost btn-circle avatar"
+                >
+                  <div className="w-12 rounded-full">
+                    <img
+                      alt="Tailwind CSS Navbar component"
+                      src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
+                    />
+                  </div>
+                </div>
+                <ul
+                  tabIndex={0}
+                  className="menu menu-sm dropdown-content text-black bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+                >
+                  <li>
+                    <a className="justify-between">
+                      Sanim Hasan
+                      <span className="badge">New</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a>Settings</a>
+                  </li>
+                  <li onClick={hanidleLoguots}>
+                    <a>Logout</a>
+                  </li>
+                </ul>
+              </div>
+            </>
+          ) : (
+            <>
+              <Link to={'/signup'}>
+                <a className="btn bg-[#f5f5f5]">Sign Up</a>
+              </Link>
+              <Link to={'/login'}>
+                <a className="btn bg-[#f5f5f5]">Login</a>
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </div>

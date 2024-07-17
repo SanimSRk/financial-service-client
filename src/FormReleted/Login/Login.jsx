@@ -1,8 +1,13 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import useAxiosPublice from '../../Hooks/useAxiosPublice';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [error, setError] = useState('');
+  const axiosPublice = useAxiosPublice();
+  const location = useLocation();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -12,6 +17,23 @@ const Login = () => {
 
   const onSubmit = data => {
     console.log(data);
+    const { email, password } = data;
+    const info = { email };
+    axiosPublice
+      .get(`/login?email=${email}&&password=${password}`)
+      .then(res => {
+        console.log(res.data);
+        const email = res.data.user.email;
+        if (res.data.user) {
+          axiosPublice.post('/jwt', info).then(res => {
+            if (res.data.token) {
+              localStorage.setItem('token', res.data.token);
+              localStorage.setItem('email', email);
+              navigate(location.state || '/');
+            }
+          });
+        }
+      });
   };
   return (
     <div>

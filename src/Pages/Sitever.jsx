@@ -4,11 +4,56 @@ const Sitever = () => {
   const navigate = useNavigate();
   const navlinks = (
     <>
-      <NavLink>Home</NavLink>
-      <NavLink to={'/sendmoney'}>Send Money</NavLink>
-      <NavLink to={'/cashout'}>Cash-Out</NavLink>
-      <NavLink>Cash-in</NavLink>
-      <NavLink>History</NavLink>
+      <NavLink
+        to={'/'}
+        className={({ isActive }) =>
+          isActive
+            ? 'bg-gray-600 font-semibold p-2 rounded-lg'
+            : 'font-semibold p-2 rounded-lg'
+        }
+      >
+        Overview
+      </NavLink>
+      <NavLink
+        to={'/sendmoney'}
+        className={({ isActive }) =>
+          isActive
+            ? 'bg-gray-600 font-semibold p-2 rounded-lg'
+            : 'font-semibold p-2 rounded-lg'
+        }
+      >
+        Send Money
+      </NavLink>
+      <NavLink
+        to={'/cashout'}
+        className={({ isActive }) =>
+          isActive
+            ? 'bg-gray-600 font-semibold p-2 rounded-lg'
+            : 'font-semibold p-2 rounded-lg'
+        }
+      >
+        Cash-Out
+      </NavLink>
+      <NavLink
+        to={'/cashin'}
+        className={({ isActive }) =>
+          isActive
+            ? 'bg-gray-600 font-semibold p-2 rounded-lg'
+            : 'font-semibold p-2 rounded-lg'
+        }
+      >
+        Cash-in
+      </NavLink>
+      <NavLink
+        to={'/userhistry'}
+        className={({ isActive }) =>
+          isActive
+            ? 'bg-gray-600 font-semibold p-2 rounded-lg'
+            : 'font-semibold p-2 rounded-lg'
+        }
+      >
+        History
+      </NavLink>
     </>
   );
   const hanidleLoguots = () => {

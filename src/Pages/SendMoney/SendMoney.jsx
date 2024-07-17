@@ -38,6 +38,15 @@ const SendMoney = () => {
       setSendMessange(null);
       axiosPublic.post('/send-money', sendIfno).then(res => {
         console.log(res.data);
+        if (res.data.insertedId) {
+          if (userData?.balance > 100) {
+            axiosPublic
+              .patch(`/send-free?email=${userData.email}`)
+              .then(res => {
+                console.log(res.data);
+              });
+          }
+        }
       });
     }
   };

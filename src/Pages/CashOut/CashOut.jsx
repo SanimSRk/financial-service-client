@@ -25,7 +25,7 @@ const CashOut = () => {
     const date = new Date();
     const money = parseFloat(sendMoney);
     const email = localStorage.getItem('email');
-    console.log(numbers, money, password, date, email);
+    console.log(numbers, money, date, email);
 
     const sendIfno = { email, numbers, money, password, date };
     if (userData?.balance < money) {

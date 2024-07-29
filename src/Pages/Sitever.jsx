@@ -1,65 +1,105 @@
 import { Link, NavLink, useNavigate } from 'react-router-dom';
+import useUser from '../Hooks/useUser';
+import { useState } from 'react';
 
 const Sitever = () => {
   const navigate = useNavigate();
+  const { userData, refetch } = useUser();
+  const [isActive, setActive] = useState(false);
   const navlinks = (
     <>
-      <NavLink
-        to={'/'}
-        className={({ isActive }) =>
-          isActive
-            ? 'bg-gray-600 font-semibold p-2 rounded-lg'
-            : 'font-semibold p-2 rounded-lg'
-        }
-      >
-        Overview
-      </NavLink>
-      <NavLink
-        to={'/sendmoney'}
-        className={({ isActive }) =>
-          isActive
-            ? 'bg-gray-600 font-semibold p-2 rounded-lg'
-            : 'font-semibold p-2 rounded-lg'
-        }
-      >
-        Send Money
-      </NavLink>
-      <NavLink
-        to={'/cashout'}
-        className={({ isActive }) =>
-          isActive
-            ? 'bg-gray-600 font-semibold p-2 rounded-lg'
-            : 'font-semibold p-2 rounded-lg'
-        }
-      >
-        Cash-Out
-      </NavLink>
-      <NavLink
-        to={'/cashin'}
-        className={({ isActive }) =>
-          isActive
-            ? 'bg-gray-600 font-semibold p-2 rounded-lg'
-            : 'font-semibold p-2 rounded-lg'
-        }
-      >
-        Cash-in
-      </NavLink>
-      <NavLink
-        to={'/userhistry'}
-        className={({ isActive }) =>
-          isActive
-            ? 'bg-gray-600 font-semibold p-2 rounded-lg'
-            : 'font-semibold p-2 rounded-lg'
-        }
-      >
-        History
-      </NavLink>
+      {userData?.email && (
+        <NavLink
+          to={'/'}
+          className={({ isActive }) =>
+            isActive
+              ? 'bg-gray-600 font-semibold p-2 rounded-lg'
+              : 'font-semibold p-2 rounded-lg'
+          }
+        >
+          Overview
+        </NavLink>
+      )}
+      {userData?.role === 'user' && (
+        <>
+          <NavLink
+            to={'/sendmoney'}
+            className={({ isActive }) =>
+              isActive
+                ? 'bg-gray-600 font-semibold p-2 rounded-lg'
+                : 'font-semibold p-2 rounded-lg'
+            }
+          >
+            Send Money
+          </NavLink>
+          <NavLink
+            to={'/cashout'}
+            className={({ isActive }) =>
+              isActive
+                ? 'bg-gray-600 font-semibold p-2 rounded-lg'
+                : 'font-semibold p-2 rounded-lg'
+            }
+          >
+            Cash-Out
+          </NavLink>
+          <NavLink
+            to={'/cashin'}
+            className={({ isActive }) =>
+              isActive
+                ? 'bg-gray-600 font-semibold p-2 rounded-lg'
+                : 'font-semibold p-2 rounded-lg'
+            }
+          >
+            Cash-in
+          </NavLink>
+
+          <NavLink
+            to={'/userhistry'}
+            className={({ isActive }) =>
+              isActive
+                ? 'bg-gray-600 font-semibold p-2 rounded-lg'
+                : 'font-semibold p-2 rounded-lg'
+            }
+          >
+            History
+          </NavLink>
+        </>
+      )}
+      {userData?.role === 'agent' && (
+        <>
+          <NavLink
+            to={'/transManagement'}
+            className={({ isActive }) =>
+              isActive
+                ? 'bg-gray-600 font-semibold p-2 rounded-lg'
+                : 'font-semibold p-2 rounded-lg'
+            }
+          >
+            Transaction Management
+          </NavLink>
+
+          <NavLink
+            to={'/userhistry'}
+            className={({ isActive }) =>
+              isActive
+                ? 'bg-gray-600 font-semibold p-2 rounded-lg'
+                : 'font-semibold p-2 rounded-lg'
+            }
+          >
+            History
+          </NavLink>
+        </>
+      )}
     </>
   );
   const hanidleLoguots = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('email');
     navigate('/login');
+  };
+
+  const handileclikBalance = () => {
+    setActive(!isActive);
   };
   return (
     <div>
@@ -108,7 +148,7 @@ const Sitever = () => {
                   <div className="w-12 rounded-full">
                     <img
                       alt="Tailwind CSS Navbar component"
-                      src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
+                      src={userData?.image}
                     />
                   </div>
                 </div>
@@ -118,7 +158,7 @@ const Sitever = () => {
                 >
                   <li>
                     <a className="justify-between">
-                      Sanim Hasan
+                      {userData.fullName}
                       <span className="badge">New</span>
                     </a>
                   </li>
@@ -133,6 +173,25 @@ const Sitever = () => {
             </>
           ) : (
             <>
+              <div>
+                {userData?.email && (
+                  <div className="  rounded-lg shadow-md  text-center">
+                    <button
+                      onClick={handileclikBalance}
+                      className={
+                        isActive
+                          ? 'bg-white btn text-xl'
+                          : 'text-white btn text-xl bg-[#4caf50]'
+                      }
+                    >
+                      {' '}
+                      <p className="font-semibold">
+                        {isActive ? '৳ 100' : ' check balance'}
+                      </p>{' '}
+                    </button>
+                  </div>
+                )}
+              </div>
               <Link to={'/signup'}>
                 <a className="btn bg-[#f5f5f5]">Sign Up</a>
               </Link>

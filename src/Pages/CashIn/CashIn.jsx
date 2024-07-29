@@ -23,6 +23,7 @@ const CashIn = () => {
       userNumber: userData?.number,
       status: 'request',
       date,
+      paymentStatus: 'cash-in',
     };
 
     axiosPublic.post('/amount-request', sendRequst).then(res => {

@@ -22,8 +22,14 @@ const Login = () => {
     axiosPublice
       .get(`/login?email=${email}&&password=${password}`)
       .then(res => {
-        console.log(res.data);
+        console.log(res?.data?.message);
+        if (res?.data?.message) {
+          setError('Your email and password invalid. Please try again');
+          return;
+        }
+
         const email = res.data.user.email;
+
         if (res.data.user) {
           axiosPublice.post('/jwt', info).then(res => {
             if (res.data.token) {

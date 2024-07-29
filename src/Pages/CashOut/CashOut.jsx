@@ -32,9 +32,14 @@ const CashOut = () => {
       setSendMessange('not avile avile balance');
       return;
     } else {
-      setSendMessange(null);
       axiosPublic.post('/cash-out', sendIfno).then(res => {
         console.log(res.data);
+        if (res?.data?.message) {
+          setSendMessange(res?.data?.message);
+          return;
+        } else {
+          setSendMessange('');
+        }
       });
     }
   };

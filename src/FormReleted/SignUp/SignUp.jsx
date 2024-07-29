@@ -3,10 +3,13 @@ import { useForm } from 'react-hook-form';
 import Select from 'react-select';
 import axios from 'axios';
 import useAxiosPublice from '../../Hooks/useAxiosPublice';
+import { useLocation, useNavigate } from 'react-router-dom';
 const SignUp = () => {
   const axiosPublic = useAxiosPublice();
   const [error, setErrors] = useState('');
   const [selectedOption, setSelectedOption] = useState('');
+  const location = useLocation();
+  const navigate = useNavigate();
   const options = [
     { value: 'user', label: 'user' },
     { value: 'agent', label: 'agent' },
@@ -59,13 +62,16 @@ const SignUp = () => {
         const info = { email: email };
         axiosPublic.post('/user', userinfo).then(res => {
           console.log(res.data);
-
+          if (res.data.message) {
+            setErrors(res.data.message);
+          }
           if (res.data.insertedId) {
             axiosPublic.post('/jwt', info).then(res => {
               console.log(res.data);
               if (res.data.token) {
                 localStorage.setItem('token', res.data.token);
                 localStorage.setItem('email', email);
+                navigate(location.state || '/');
               }
             });
           }

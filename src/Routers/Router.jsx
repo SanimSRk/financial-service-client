@@ -7,6 +7,8 @@ import CashOut from '../Pages/CashOut/CashOut';
 import CashIn from '../Pages/CashIn/CashIn';
 import UserHostry from '../Pages/userHostry/UserHostry';
 import OwerView from '../Pages/OverView/OwerView';
+import UserManagenent from '../Pages/UserManagement/UserManagenent';
+import TransactionManagement from '../Pages/transactionManagement/TransactionManagement';
 
 export const router = createBrowserRouter([
   {
@@ -40,6 +42,14 @@ export const router = createBrowserRouter([
       {
         path: '/userhistry',
         element: <UserHostry></UserHostry>,
+      },
+      {
+        path: '/transManagement',
+        element: <TransactionManagement></TransactionManagement>,
+      },
+      {
+        path: '/usermanagement',
+        element: <UserManagenent></UserManagenent>,
       },
     ],
   },

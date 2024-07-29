@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { set, useForm } from 'react-hook-form';
 import useUser from '../../Hooks/useUser';
 import useAxiosPublice from '../../Hooks/useAxiosPublice';
 
@@ -27,7 +27,13 @@ const SendMoney = () => {
     const email = localStorage.getItem('email');
     console.log(numbers, money, password, date, email);
 
-    const sendIfno = { email, numbers, money, password, date };
+    const sendIfno = {
+      email,
+      numbers,
+      money,
+      password,
+      date,
+    };
     if (money < 50) {
       setSendMessange(' Transaction amount must be at least 50 Taka');
       return;
@@ -38,14 +44,11 @@ const SendMoney = () => {
       setSendMessange(null);
       axiosPublic.post('/send-money', sendIfno).then(res => {
         console.log(res.data);
-        if (res.data.insertedId) {
-          if (userData?.balance > 100) {
-            axiosPublic
-              .patch(`/send-free?email=${userData.email}`)
-              .then(res => {
-                console.log(res.data);
-              });
-          }
+        if (res.data.message) {
+          setSendMessange(res.data.message);
+          return;
+        } else {
+          setSendMessange(null);
         }
       });
     }

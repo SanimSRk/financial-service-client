@@ -28,6 +28,7 @@ const UserHostry = () => {
                 <th></th>
                 <th>Email</th>
                 <th>Payment amount</th>
+                <th>Payment-Status</th>
                 <th>Payment Number</th>
                 <th>Date</th>
               </tr>
@@ -38,8 +39,8 @@ const UserHostry = () => {
                 <tr>
                   <th>{index + 1}</th>
                   <td>{item?.email}</td>
-
                   <td>{item?.money}$</td>
+                  <td>{item?.paymentStatus}</td>
                   <td>{item?.numbers}</td>
                   <td>{item?.date}</td>
                 </tr>

@@ -9,6 +9,8 @@ import UserHostry from '../Pages/userHostry/UserHostry';
 import OwerView from '../Pages/OverView/OwerView';
 import UserManagenent from '../Pages/UserManagement/UserManagenent';
 import TransactionManagement from '../Pages/transactionManagement/TransactionManagement';
+import AgentHistory from '../Pages/AgentHistory/AgentHistory';
+import AllTransaction from '../Pages/AllTransaction/AllTransaction';
 
 export const router = createBrowserRouter([
   {
@@ -50,6 +52,18 @@ export const router = createBrowserRouter([
       {
         path: '/usermanagement',
         element: <UserManagenent></UserManagenent>,
+      },
+      {
+        path: '/agent-history',
+        element: <AgentHistory></AgentHistory>,
+      },
+      {
+        path: '/user-management',
+        element: <UserManagenent></UserManagenent>,
+      },
+      {
+        path: '/all-history',
+        element: <AllTransaction></AllTransaction>,
       },
     ],
   },

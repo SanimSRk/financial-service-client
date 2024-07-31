@@ -35,9 +35,9 @@ const AllTransaction = () => {
                   {/* row 1 */}
                   <tr>
                     <th>{index + 1}</th>
-                    <td>{item?.email}$</td>
+                    <td>{item?.email}</td>
                     <td>{item?.paymentStatus}</td>
-                    <td>{item?.money}</td>
+                    <td>{item?.money}$</td>
                     <td>{item?.date}</td>
                   </tr>
                 </tbody>

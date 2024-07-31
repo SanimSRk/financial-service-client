@@ -79,7 +79,7 @@ const Sitever = () => {
           </NavLink>
 
           <NavLink
-            to={'/userhistry'}
+            to={'/agent-history'}
             className={({ isActive }) =>
               isActive
                 ? 'bg-gray-600 font-semibold p-2 rounded-lg'
@@ -87,6 +87,30 @@ const Sitever = () => {
             }
           >
             History
+          </NavLink>
+        </>
+      )}
+      {userData?.role === 'admin' && (
+        <>
+          <NavLink
+            to={'/user-management'}
+            className={({ isActive }) =>
+              isActive
+                ? 'bg-gray-600 font-semibold p-2 rounded-lg'
+                : 'font-semibold p-2 rounded-lg'
+            }
+          >
+            User-Management
+          </NavLink>
+          <NavLink
+            to={'/all-history'}
+            className={({ isActive }) =>
+              isActive
+                ? 'bg-gray-600 font-semibold p-2 rounded-lg'
+                : 'font-semibold p-2 rounded-lg'
+            }
+          >
+            System-Monitoring
           </NavLink>
         </>
       )}
@@ -143,12 +167,13 @@ const Sitever = () => {
                 <div
                   tabIndex={0}
                   role="button"
-                  className="btn btn-ghost btn-circle avatar"
+                  className="btn btn-ghost btn-circle border border-white avatar"
                 >
-                  <div className="w-12 rounded-full">
+                  <div className="w-16 rounded-full p-1">
                     <img
-                      alt="Tailwind CSS Navbar component"
+                      alt="Tailwind  CSS Navbar component"
                       src={userData?.image}
+                      className="w-ful rounded-full"
                     />
                   </div>
                 </div>
@@ -158,7 +183,7 @@ const Sitever = () => {
                 >
                   <li>
                     <a className="justify-between">
-                      {userData.fullName}
+                      {userData?.name}
                       <span className="badge">New</span>
                     </a>
                   </li>

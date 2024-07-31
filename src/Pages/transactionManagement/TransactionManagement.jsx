@@ -5,45 +5,52 @@ import useUser from '../../Hooks/useUser';
 const TransactionManagement = () => {
   const { userData, refetch } = useUser();
   const axiosPublic = useAxiosPublice();
+
   const { data } = useQuery({
     queryKey: [userData?.email, 'transaction-hostry'],
     queryFn: async () => {
       const { data } = await axiosPublic.get(
-        `/transactions-management?email=${userData?.email}`
+        `/transactions-management?email=${userData?.number}`
       );
       return data;
     },
   });
 
   const handileClickeManagement = (id, email, money) => {
-    axiosPublic.patch(`/userBalance-update?email=${email}`, money).then(res => {
-      console.log(res.data);
+    const moneyInfo = {
+      money,
+    };
+    axiosPublic
+      .patch(`/userBalance-update?email=${email}`, moneyInfo)
+      .then(res => {
+        console.log(res.data);
+        if (res.data.modifiedCount) {
+          axiosPublic
+            .patch(`/agentBalance-update?email=${userData?.email}`, moneyInfo)
+            .then(res => {
+              console.log(res.data);
+              if (res.data.modifiedCount) {
+                axiosPublic.put(`/request-mamagement/${id}`).then(res => {
+                  console.log(res.data);
+                  const paymentInfo = {
+                    useremail: email,
+                    email: userData.email,
+                    money,
+                    paymentStatus: 'cash-out',
+                    date: new Date(),
+                  };
 
-      if (res.data.modifiedCount) {
-        axiosPublic
-          .patch(`/agentBalance-update?email=${userData?.email}`, money)
-          .then(res => {
-            if (res.data.modifiedCount) {
-              axiosPublic.put(`/request-mamagement/:${id}`).then(res => {
-                console.log(res.data);
-                const paymentInfo = {
-                  useremail: email,
-                  email: userData.email,
-                  money,
-                  paymentStatus: 'cash-out',
-                  date: new Date(),
-                };
-
-                axiosPublic
-                  .post('/send-payment-history', paymentInfo)
-                  .then(res => {
-                    console.log(res.data);
-                  });
-              });
-            }
-          });
-      }
-    });
+                  axiosPublic
+                    .post('/send-payment-history', paymentInfo)
+                    .then(res => {
+                      console.log(res.data);
+                      refetch();
+                    });
+                });
+              }
+            });
+        }
+      });
   };
 
   return (

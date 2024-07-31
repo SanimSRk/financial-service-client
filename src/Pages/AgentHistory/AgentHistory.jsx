@@ -31,8 +31,8 @@ const AgentHistory = () => {
                   <th>My Email</th>
                   <th>Payment Amount</th>
                   <th>Payment Email</th>
-                  <th>Date</th>
                   <th>Payment-Status</th>
+                  <th>Date</th>
                 </tr>
               </thead>
               {data?.map((item, index) => (
@@ -43,8 +43,8 @@ const AgentHistory = () => {
                     <td>{item?.email}</td>
                     <td>{item?.money}$</td>
                     <td>{item?.useremail}</td>
-                    <td>{item?.date}</td>
                     <td>{item?.paymentStatus}</td>
+                    <td>{item?.date}</td>
                   </tr>
                 </tbody>
               ))}

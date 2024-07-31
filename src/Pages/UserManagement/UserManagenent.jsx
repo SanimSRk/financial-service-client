@@ -1,28 +1,32 @@
 import { useQuery } from '@tanstack/react-query';
 import useAxiosPublice from '../../Hooks/useAxiosPublice';
+import { useState } from 'react';
 
 const UserManagenent = () => {
   const axiosPublic = useAxiosPublice();
-  const { data } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: ['users-management'],
     queryFn: async () => {
       const { data } = await axiosPublic.get(`/users-management`);
+      setSearchData(data);
       return data;
     },
   });
+  const [SearchData, setSearchData] = useState([]);
 
   const handileClickAcetiveAccount = (id, role) => {
-    axiosPublic.patch(`/active-account/:${id}`).then(res => {
+    axiosPublic.patch(`/active-account/${id}`).then(res => {
       console.log(res.data);
       if (res.data.modifiedCount) {
         if (role === 'user') {
-          axiosPublic.patch(`/userBalance-updates/:${id}`).then(res => {
+          axiosPublic.patch(`/userBalance-updates/${id}`).then(res => {
             console.log(res.data);
           });
           return;
         } else if (role === 'agent') {
-          axiosPublic.patch(`/agentsBalance-updates/:${id}`).then(res => {
+          axiosPublic.patch(`/agentsBalance-updates/${id}`).then(res => {
             console.log(res.data);
+            refetch();
           });
           return;
         }
@@ -31,8 +35,20 @@ const UserManagenent = () => {
   };
 
   const handileClickBlockAccount = id => {
-    axiosPublic.patch(`/block-account/:${id}`).then(res => {
+    axiosPublic.patch(`/block-account/${id}`).then(res => {
+      refetch();
       console.log(res.data);
+    });
+  };
+
+  const handileClickSearch = e => {
+    e.preventDefault();
+
+    const search = e.target.searchText.value;
+
+    axiosPublic.get(`/searcNames?search=${search}`).then(res => {
+      console.log(res.data);
+      setSearchData(res.data);
     });
   };
 
@@ -42,10 +58,11 @@ const UserManagenent = () => {
         User Management
       </h2>
       <div className="mt-8">
-        <form>
+        <form onSubmit={handileClickSearch}>
           <div className="flex justify-center">
             <input
               type="text"
+              name="searchText"
               className="input w-full md:w-2/3  border-green-500 lg:w-1/3 input-bordered rounded-r-none"
             />
             <button
@@ -74,13 +91,13 @@ const UserManagenent = () => {
                   <th>Block</th>
                 </tr>
               </thead>
-              {data?.map((item, index) => (
+              {SearchData?.map((item, index) => (
                 <tbody key={item._id}>
                   {/* row 1 */}
                   <tr>
                     <th>{index + 1}</th>
-                    <td>{item?.fullName}</td>
-                    <td>{item?.email}$</td>
+                    <td>{item?.name}</td>
+                    <td>{item?.email}</td>
                     <td>{item?.number}</td>
                     <td>{item?.role}</td>
                     <td>{item?.status}</td>
@@ -89,7 +106,11 @@ const UserManagenent = () => {
                         onClick={() =>
                           handileClickAcetiveAccount(item?._id, item?.role)
                         }
-                        className="btn bg-red-500 text-white"
+                        className={
+                          item?.status === 'actived'
+                            ? 'btn bg-green-500 text-white btn-disabled'
+                            : 'btn bg-green-500 text-white'
+                        }
                       >
                         Active
                       </button>
@@ -97,7 +118,11 @@ const UserManagenent = () => {
                     <td>
                       <button
                         onClick={() => handileClickBlockAccount(item?._id)}
-                        className="btn bg-red-500 text-white"
+                        className={
+                          item?.status === 'block'
+                            ? 'btn bg-red-500 text-white btn-disabled'
+                            : 'btn bg-red-500 text-white'
+                        }
                       >
                         Block
                       </button>

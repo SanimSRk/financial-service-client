@@ -4,6 +4,7 @@ import Select from 'react-select';
 import axios from 'axios';
 import useAxiosPublice from '../../Hooks/useAxiosPublice';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 const SignUp = () => {
   const axiosPublic = useAxiosPublice();
   const [error, setErrors] = useState('');
@@ -63,14 +64,17 @@ const SignUp = () => {
         axiosPublic.post('/user', userinfo).then(res => {
           console.log(res.data);
           if (res.data.message) {
-            setErrors(res.data.message);
+            toast.error('You have a alredy account please login now ');
+            return;
           }
+
           if (res.data.insertedId) {
             axiosPublic.post('/jwt', info).then(res => {
               console.log(res.data);
               if (res.data.token) {
                 localStorage.setItem('token', res.data.token);
                 localStorage.setItem('email', email);
+                toast.success('User success fully sign up done ');
                 navigate(location.state || '/');
               }
             });

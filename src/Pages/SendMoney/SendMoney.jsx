@@ -1,14 +1,17 @@
 import { useState } from 'react';
-import { set, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import useUser from '../../Hooks/useUser';
 import useAxiosPublice from '../../Hooks/useAxiosPublice';
+import { toast } from 'react-toastify';
 
 const SendMoney = () => {
   const [sendMoney, setSendMoney] = useState(0);
   const [sendMessage, setSendMessange] = useState('');
   const { userData, refetch } = useUser();
   const axiosPublic = useAxiosPublice();
+
   console.log(userData?.balance);
+
   const handileClickCoins = e => {
     setSendMoney(e);
   };
@@ -18,7 +21,7 @@ const SendMoney = () => {
     watch,
     formState: { errors },
   } = useForm();
-
+  console.log(userData?.status);
   const onSubmit = data => {
     console.log(data);
     const { numbers, password } = data;
@@ -34,23 +37,34 @@ const SendMoney = () => {
       password,
       date,
     };
-    if (money < 50) {
-      setSendMessange(' Transaction amount must be at least 50 Taka');
-      return;
-    } else if (userData?.balance < money) {
-      setSendMessange('not avile avile balance');
-      return;
+    if (userData?.status === 'actived') {
+      if (money < 50) {
+        setSendMessange(' Transaction amount must be at least 50 Taka');
+        return;
+      } else if (userData?.balance < money) {
+        setSendMessange('not avile avile balance');
+        return;
+      } else {
+        setSendMessange(null);
+        axiosPublic.post('/send-money', sendIfno).then(res => {
+          console.log(res.data);
+          refetch();
+          if (res.data.message) {
+            setSendMessange(res.data.message);
+            return;
+          } else {
+            setSendMessange(null);
+          }
+
+          if (res?.data?.user.insertedId) {
+            toast.success('send money success fully done ');
+          }
+        });
+      }
     } else {
-      setSendMessange(null);
-      axiosPublic.post('/send-money', sendIfno).then(res => {
-        console.log(res.data);
-        if (res.data.message) {
-          setSendMessange(res.data.message);
-          return;
-        } else {
-          setSendMessange(null);
-        }
-      });
+      toast.error(
+        ' your account is not actived please with active your account! '
+      );
     }
   };
   return (

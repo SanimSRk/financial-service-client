@@ -130,7 +130,11 @@ const Sitever = () => {
       <div className="navbar bg-[#4caf50] text-[#ffffff]">
         <div className="navbar-start">
           <div className="dropdown">
-            <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
+            <div
+              tabIndex={0}
+              role="button"
+              className="btn btn-ghost   lg:hidden"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5"
@@ -163,6 +167,25 @@ const Sitever = () => {
         <div className="navbar-end gap-3">
           {localStorage.getItem('token') ? (
             <>
+              <div>
+                {userData?.email && (
+                  <div className="  rounded-lg shadow-md  text-center">
+                    <button
+                      onClick={handileclikBalance}
+                      className={
+                        isActive
+                          ? 'bg-white btn font-semibold'
+                          : 'text-white btn font-semibold bg-[#4caf50]'
+                      }
+                    >
+                      {' '}
+                      <p className="font-semibold">
+                        {isActive ? `$ ${userData?.balance}` : ' Check balance'}
+                      </p>{' '}
+                    </button>
+                  </div>
+                )}
+              </div>
               <div className="dropdown dropdown-end">
                 <div
                   tabIndex={0}
@@ -198,25 +221,6 @@ const Sitever = () => {
             </>
           ) : (
             <>
-              <div>
-                {userData?.email && (
-                  <div className="  rounded-lg shadow-md  text-center">
-                    <button
-                      onClick={handileclikBalance}
-                      className={
-                        isActive
-                          ? 'bg-white btn text-xl'
-                          : 'text-white btn text-xl bg-[#4caf50]'
-                      }
-                    >
-                      {' '}
-                      <p className="font-semibold">
-                        {isActive ? '৳ 100' : ' check balance'}
-                      </p>{' '}
-                    </button>
-                  </div>
-                )}
-              </div>
               <Link to={'/signup'}>
                 <a className="btn bg-[#f5f5f5]">Sign Up</a>
               </Link>

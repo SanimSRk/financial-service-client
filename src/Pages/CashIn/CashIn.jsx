@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form';
 import useUser from '../../Hooks/useUser';
 import useAxiosPublice from '../../Hooks/useAxiosPublice';
+import { toast } from 'react-toastify';
 
 const CashIn = () => {
   const { userData, refetch } = useUser();
@@ -16,19 +17,28 @@ const CashIn = () => {
     const { numbers, balance } = data;
     console.log(numbers, balance);
     const date = new Date();
-    const sendRequst = {
-      numbers,
-      money: balance,
-      email: userData?.email,
-      userNumber: userData?.number,
-      status: 'request',
-      date,
-      paymentStatus: 'cash-in',
-    };
+    if (userData?.status === 'actived') {
+      const sendRequst = {
+        numbers,
+        money: balance,
+        email: userData?.email,
+        userNumber: userData?.number,
+        status: 'request',
+        date,
+        paymentStatus: 'cash-in',
+      };
 
-    axiosPublic.post('/amount-request', sendRequst).then(res => {
-      console.log(res.data);
-    });
+      axiosPublic.post('/amount-request', sendRequst).then(res => {
+        console.log(res.data);
+        if (res.data.insertedId) {
+          toast.success('Cash in request success fully send ');
+        }
+      });
+    } else {
+      toast.error(
+        ' your account is not actived please with active your account! '
+      );
+    }
   };
   return (
     <div>

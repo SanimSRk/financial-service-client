@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import useAxiosPublice from '../../Hooks/useAxiosPublice';
 import useUser from '../../Hooks/useUser';
+import { toast } from 'react-toastify';
 
 const TransactionManagement = () => {
   const { userData, refetch } = useUser();
   const axiosPublic = useAxiosPublice();
-
   const { data } = useQuery({
     queryKey: [userData?.email, 'transaction-hostry'],
     queryFn: async () => {
@@ -17,40 +17,49 @@ const TransactionManagement = () => {
   });
 
   const handileClickeManagement = (id, email, money) => {
-    const moneyInfo = {
-      money,
-    };
-    axiosPublic
-      .patch(`/userBalance-update?email=${email}`, moneyInfo)
-      .then(res => {
-        console.log(res.data);
-        if (res.data.modifiedCount) {
-          axiosPublic
-            .patch(`/agentBalance-update?email=${userData?.email}`, moneyInfo)
-            .then(res => {
-              console.log(res.data);
-              if (res.data.modifiedCount) {
-                axiosPublic.put(`/request-mamagement/${id}`).then(res => {
-                  console.log(res.data);
-                  const paymentInfo = {
-                    useremail: email,
-                    email: userData.email,
-                    money,
-                    paymentStatus: 'cash-out',
-                    date: new Date(),
-                  };
+    if (userData?.status === 'actived') {
+      const moneyInfo = {
+        money,
+      };
+      axiosPublic
+        .patch(`/userBalance-update?email=${email}`, moneyInfo)
+        .then(res => {
+          console.log(res.data);
+          if (res.data.modifiedCount) {
+            axiosPublic
+              .patch(`/agentBalance-update?email=${userData?.email}`, moneyInfo)
+              .then(res => {
+                console.log(res.data);
+                if (res.data.modifiedCount) {
+                  axiosPublic.put(`/request-mamagement/${id}`).then(res => {
+                    console.log(res.data);
+                    const paymentInfo = {
+                      useremail: email,
+                      email: userData.email,
+                      money,
+                      paymentStatus: 'cash-out',
+                      date: new Date(),
+                    };
 
-                  axiosPublic
-                    .post('/send-payment-history', paymentInfo)
-                    .then(res => {
-                      console.log(res.data);
-                      refetch();
-                    });
-                });
-              }
-            });
-        }
-      });
+                    axiosPublic
+                      .post('/send-payment-history', paymentInfo)
+                      .then(res => {
+                        refetch();
+                        console.log(res.data);
+                        if (res.data.insertedId) {
+                          toast.success('Transaction success fully done ');
+                        }
+                      });
+                  });
+                }
+              });
+          }
+        });
+    } else {
+      toast.error(
+        'your account is not actived please with active your account !'
+      );
+    }
   };
 
   return (

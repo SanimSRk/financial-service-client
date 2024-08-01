@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import useUser from '../../Hooks/useUser';
 import useAxiosPublice from '../../Hooks/useAxiosPublice';
+import { toast } from 'react-toastify';
 
 const CashOut = () => {
   const [sendMoney, setSendMoney] = useState(0);
@@ -26,23 +27,32 @@ const CashOut = () => {
     const money = parseFloat(sendMoney);
     const email = localStorage.getItem('email');
     console.log(numbers, money, date, email);
-
-    const sendIfno = { email, numbers, money, password, date };
-    if (userData?.balance < money) {
-      setSendMessange('not avile avile balance');
-      return;
+    if (userData?.status === 'actived') {
+      const sendIfno = { email, numbers, money, password, date };
+      if (userData?.balance < money) {
+        setSendMessange('not avile avile balance');
+        return;
+      } else {
+        axiosPublic.post('/cash-out', sendIfno).then(res => {
+          console.log(res.data);
+          if (res?.data?.message) {
+            setSendMessange(res?.data?.message);
+            return;
+          } else {
+            setSendMessange('');
+          }
+          if (res.data.user.insertedId) {
+            toast.success('Cash out success fully done ');
+          }
+        });
+      }
     } else {
-      axiosPublic.post('/cash-out', sendIfno).then(res => {
-        console.log(res.data);
-        if (res?.data?.message) {
-          setSendMessange(res?.data?.message);
-          return;
-        } else {
-          setSendMessange('');
-        }
-      });
+      toast.error(
+        ' your account is not actived please with active your account! '
+      );
     }
   };
+  console.log(sendMessage);
   return (
     <div>
       <div className=" lg:w-2/3 border-2 border-green-300 mx-auto py-8 px-6 my-[80px] shadow-lg lg:py-[60px] lg:px-[80px]">
